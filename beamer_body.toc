@@ -1,0 +1,12 @@
+\beamer@endinputifotherversion {3.36pt}
+\beamer@sectionintoc {1}{Trick: Spoofing}{3}{0}{1}
+\beamer@sectionintoc {2}{价格生成机制}{16}{0}{2}
+\beamer@subsectionintoc {2}{1}{期货交易流程}{17}{0}{2}
+\beamer@subsectionintoc {2}{2}{下单}{19}{0}{2}
+\beamer@subsectionintoc {2}{3}{竞价}{22}{0}{2}
+\beamer@sectionintoc {3}{期货价格分析}{32}{0}{3}
+\beamer@subsectionintoc {3}{1}{行情，Tick与Bar的概念}{33}{0}{3}
+\beamer@subsectionintoc {3}{2}{Tick形成}{36}{0}{3}
+\beamer@subsectionintoc {3}{3}{K线形成}{39}{0}{3}
+\beamer@subsectionintoc {3}{4}{行情推送}{41}{0}{3}
+\beamer@sectionintoc {4}{交易市场}{45}{0}{4}

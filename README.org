@@ -1,0 +1,31 @@
+
+* =LATEX= 中关于表格的设置
+
+示例代码：
+#+BEGIN_SRC latex
+  \begin{table}[htb]
+      \caption*{Tick 1(Visible)}
+      \centering
+      \resizebox{\textwidth}{!}{
+        \setlength{\arrayrulewidth}{2pt}
+        \arrayrulecolor{orange}
+        \begin{tabular}{|
+          >{\columncolor{mycyan}}c|
+          >{\columncolor{mycyan}}c|
+          >{\columncolor{mypink}}c|
+          >{\columncolor{mypink}}c|}
+          \arrayrulecolor{orange}\hline
+          \multicolumn{1}{>{\columncolor{cyan}}c|}{\color{white}\textsf{Offer Pricule}} &  \multicolumn{1}{>{\columncolor{cyan}}c|}{\color{white}\textsf{Offer Quantity}} &
+          \multicolumn{1}{>{\columncolor{pink}}c|}{\color{white}\textsf{Bid Price}} &  \multicolumn{1}{>{\columncolor{pink}}c}{\color{white}\textsf{Bid Quantity}}
+          \\
+          \arrayrulecolor{orange}\hline
+          100 & 1 &102 &9\\
+          100 & 1 &102 &9\\
+          100 & 1 &102 &9\\
+          100 & 1 &102 &9\\
+          \arrayrulecolor{orange}\hline
+        \end{tabular}
+        }
+    \end{table}
+
+#+END_SRC

@@ -1,0 +1,849 @@
+\input{beamer_head}
+
+% 使用 \part,\section,\subsection 等命令组织文档结构
+% 使用 \frame 命令制作幻灯片
+
+\begin{document}
+
+\logo{\includegraphics[height=0.09\textwidth]{gm.jpg}}
+\title[价格生成机制]{交易规则与价格生成机制}
+\author[李波文]{李波文}
+\institute[GOLDMINER]{掘金量化交易平台}
+\date{\today}
+
+% 定义目录页
+\AtBeginPart{
+  \frame{
+    \frametitle{\partpage}
+    \begin{multicols}{2}
+% 如果目录过长，可以打开这个选项分两栏显示
+      \tableofcontents
+% 使用这个命令自动生成目录
+    \end{multicols}
+  }  
+}
+
+% 在每个Section前都会加入的Frame
+\AtBeginSection[]
+{
+  \begin{frame}<beamer>
+    \frametitle{提纲}
+	\setcounter{tocdepth}{2}
+    \tableofcontents[currentsection,currentsubsection]
+  \end{frame}
+}
+% 在每个Subsection前都会加入的Frame
+\AtBeginSubsection[]
+{
+  \begin{frame}<beamer>
+%\begin{frame}<handout:0>
+% handout:0 表示只在手稿中出现
+    \frametitle{提纲}
+	\setcounter{tocdepth}{2}
+    \tableofcontents[currentsection,currentsubsection]
+% 显示在目录中加亮的当前章节
+  \end{frame}
+}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}[plain]
+  \frametitle{提纲}
+  \setcounter{tocdepth}{2}
+  \tableofcontents
+\end{frame}
+
+\section{Trick: Spoofing}
+
+\begin{frame}{Spoofing}
+  \begin{columns}
+    \column{6cm}
+\begin{table}
+  \centering
+    \begin{subtable}[b]{0.4\textwidth}
+    \resizebox{\textwidth}{!}{
+      \setlength{\arrayrulewidth}{2pt}
+      \arrayrulecolor{orange}
+      \begin{tabular}{c|c}
+        \arrayrulecolor{orange}\hline
+        \multicolumn{1}{>{\columncolor{cyan}}c|}{\color{white}\textsf{Offer Price}} &  \multicolumn{1}{>{\columncolor{cyan}}c}{\color{white}\textsf{Offer Quantity}}\\ 
+        \arrayrulecolor{orange}\hline
+        \rowcolor{mycyan}
+        {} & {} \\
+        \arrayrulecolor{orange}\hline
+        \rowcolor{mycyan}
+        {} & {} \\
+        \arrayrulecolor{orange}\hline
+        \rowcolor{mycyan}
+        {} & {} \\
+        \arrayrulecolor{orange}\hline
+        \rowcolor{mycyan}
+        3285.20 & 1 \\
+        \arrayrulecolor{orange}\hline
+        \multicolumn{1}{>{\columncolor{pink}}c|}{\color{white}\textsf{Bid Price}} &  \multicolumn{1}{>{\columncolor{pink}}c}{\color{white}\textsf{Bid Quantity}}\\
+        \arrayrulecolor{orange}\hline
+        \rowcolor{mypink}
+        3281.20 & 1\\
+        \arrayrulecolor{orange}\hline
+        \rowcolor{mypink}
+        {} & {}\\
+        \arrayrulecolor{orange}\hline
+        \rowcolor{mypink}
+        {} & {}\\
+        \arrayrulecolor{orange}\hline
+        \rowcolor{mypink}
+        {} & {}\\
+        \arrayrulecolor{orange}\hline
+      \end{tabular}
+      }
+      \caption*{\scriptsize{Tick 1(Visible)}}
+    \end{subtable}
+    \begin{subtable}[b]{0.4\textwidth}
+      \resizebox{\textwidth}{!}{
+        \setlength{\arrayrulewidth}{2pt}
+        \arrayrulecolor{orange}
+        \begin{tabular}{c|c}
+          \arrayrulecolor{orange}\hline
+          \multicolumn{1}{>{\columncolor{cyan}}c|}{\color{white}\textsf{Offer Price}} &  \multicolumn{1}{>{\columncolor{cyan}}c}{\color{white}\textsf{Offer Quantity}}\\ 
+          \arrayrulecolor{orange}\hline
+          \rowcolor{mycyan}
+          {} & {} \\
+          \arrayrulecolor{orange}\hline
+          \rowcolor{mycyan}
+          \textcolor{red}{3286.20} & \textcolor{red}{3} \\
+          \arrayrulecolor{orange}\hline
+          \rowcolor{mycyan}
+          \textcolor{red}{3285.4} & \textcolor{red}{1-1=0}\\
+          \arrayrulecolor{orange}\hline
+          \rowcolor{mycyan}
+          \textcolor{red}{3285.20} & \textcolor{red}{1-1=0}\\
+          \arrayrulecolor{orange}\hline
+          \multicolumn{1}{>{\columncolor{pink}}c|}{\color{white}\textsf{Bid Price}} &  \multicolumn{1}{>{\columncolor{pink}}c}{\color{white}\textsf{Bid Quantity}}\\
+          \arrayrulecolor{orange}\hline
+          \rowcolor{mypink}
+          \textcolor{red}{3285.4} & \textcolor{red}{3-1-1=1}\\
+          \arrayrulecolor{orange}\hline
+          \rowcolor{mypink}
+          {} & {}\\
+          \arrayrulecolor{orange}\hline
+          \rowcolor{mypink}
+          {} & {}\\
+          \arrayrulecolor{orange}\hline
+          \rowcolor{mypink}
+          {} & {}\\
+          \arrayrulecolor{orange}\hline
+        \end{tabular}
+      }
+      \caption*{\scriptsize{500 ms(Invisible)}}
+    \end{subtable}
+  \end{table}
+\begin{table}
+  \centering
+    \begin{subtable}[b]{0.4\textwidth}
+    \resizebox{\textwidth}{!}{
+      \setlength{\arrayrulewidth}{2pt}
+      \arrayrulecolor{orange}
+      \begin{tabular}{c|c}
+        \arrayrulecolor{orange}\hline
+        \multicolumn{1}{>{\columncolor{cyan}}c|}{\color{white}\textsf{Offer Price}} &  \multicolumn{1}{>{\columncolor{cyan}}c}{\color{white}\textsf{Offer Quantity}}\\ 
+        \arrayrulecolor{orange}\hline
+        \rowcolor{mycyan}
+        {} & {} \\
+        \arrayrulecolor{orange}\hline
+        \rowcolor{mycyan}
+        {} & {} \\
+        \arrayrulecolor{orange}\hline
+        \rowcolor{mycyan}
+        {} & {} \\
+        \arrayrulecolor{orange}\hline
+        \rowcolor{mycyan}
+        3286.20 & 3 \\
+        \arrayrulecolor{orange}\hline
+        \multicolumn{1}{>{\columncolor{pink}}c|}{\color{white}\textsf{Bid Price}} &  \multicolumn{1}{>{\columncolor{pink}}c}{\color{white}\textsf{Bid Quantity}}\\
+        \arrayrulecolor{orange}\hline
+        \rowcolor{mypink}
+        3285.4 & 1\\
+        \arrayrulecolor{orange}\hline
+        \rowcolor{mypink}
+        3281.2 & 1\\
+        \arrayrulecolor{orange}\hline
+        \rowcolor{mypink}
+        {} & {}\\
+        \arrayrulecolor{orange}\hline
+        \rowcolor{mypink}
+        {} & {}\\
+        \arrayrulecolor{orange}\hline
+      \end{tabular}
+      }
+      \caption*{\scriptsize{Tick 2(Visible)}}
+    \end{subtable}
+    \begin{subtable}[b]{0.4\textwidth}
+      \resizebox{\textwidth}{!}{
+        \setlength{\arrayrulewidth}{2pt}
+        \arrayrulecolor{orange}
+        \begin{tabular}{c|c}
+          \arrayrulecolor{orange}\hline
+          \multicolumn{1}{>{\columncolor{cyan}}c|}{\color{white}\textsf{Offer Price}} &  \multicolumn{1}{>{\columncolor{cyan}}c}{\color{white}\textsf{Offer Quantity}}\\ 
+          \arrayrulecolor{orange}\hline
+          \rowcolor{mycyan}
+          {} & {} \\
+          \arrayrulecolor{orange}\hline
+          \rowcolor{mycyan}
+          {} & {} \\
+          \arrayrulecolor{orange}\hline
+          \rowcolor{mycyan}
+          {} & {} \\
+          \arrayrulecolor{orange}\hline
+          \rowcolor{mycyan}
+          3286.20 & 1 \\
+          \arrayrulecolor{orange}\hline
+          \multicolumn{1}{>{\columncolor{pink}}c|}{\color{white}\textsf{Bid Price}} &  \multicolumn{1}{>{\columncolor{pink}}c}{\color{white}\textsf{Bid Quantity}}\\
+          \arrayrulecolor{orange}\hline
+          \rowcolor{mypink}
+          3281.20 & 1\\
+          \arrayrulecolor{orange}\hline
+          \rowcolor{mypink}
+          {} & {}\\
+          \arrayrulecolor{orange}\hline
+          \rowcolor{mypink}
+          {} & {}\\
+          \arrayrulecolor{orange}\hline
+          \rowcolor{mypink}
+          {} & {}\\
+          \arrayrulecolor{orange}\hline
+        \end{tabular}
+      }
+      \caption*{\scriptsize{Tick 3(Visible)}}
+    \end{subtable}
+  \end{table}
+  \column{5cm}
+  \begin{itemize}
+  \item Tick 1 $\to$ Tick 2:
+    \begin{enumerate}[<+-|alert@+>]
+    \item No order higher than 3285.2
+    \item Acc A sell 1$@$3285.4, Acc B buy 3$@$3285.4, fill 1$@$3285.2, match 1$@$3285.4
+    \item Sell 3$@$3286.2
+    \end{enumerate}
+  \item Tick 2 $\to$ Tick 3:
+    \begin{enumerate}[<+-|alert@+>]
+    \item Cancel 1$@$3285.4, cancel 2$@$3286.2
+    \item Close buy 1$@$3285.4 at price higher e.g. 3285.8, get (3285.8-3285.2=0.6)
+    \item Cancel 1$@$3286.2
+    \end{enumerate}
+  \end{itemize}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Question from Spoofing}
+  \begin{columns}
+    \column{3cm}
+    \begin{figure}
+      \centering
+      \includegraphics[width=1\textwidth]{figures/question.jpg}
+    \end{figure}
+    \column{6cm}
+    \begin{enumerate}[<+-|alert@+>]
+    \item 价格如何产生？ $\rightarrow$ 交易竞价
+    \item 如何交易？ $\rightarrow$ 行情报价机制、交易指令
+    \item 如何成交？ $\rightarrow$ 成交价形成规则
+    \item Tick 是什么？ $\rightarrow$ 行情与推送，Tick与Bar， K线
+    \item 思绪混乱，逻辑不清，如何着手学习？ $\rightarrow$ 按一个策略的信息输入
+      与输出进行梳理。
+    \end{enumerate}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{策略作为系统处理系统}
+  \begin{figure}
+    \centering
+    \def\rectanglepath{-- ++(3.7, 0) -- ++(0, 2.2) -- ++(-3.7, 0) --cycle}
+    \tikzstyle{place}=[rectangle,draw=blue!50,fill=blue!20,thick,
+    inner sep=0pt,minimum size=6mm]
+    \tikzstyle{transition}=[diamond,aspect=2,draw=black!50,fill=black!20,thick,
+    inner sep=0pt,minimum size=1mm]
+    \begin{tikzpicture}[scale=0.7]
+      \node at ( 0,6) [place] (label5) {报价下单机制(策略的动作输出)};
+      \node at ( 0,3) [place] (label4) {行情推送机制(策略的信息输入)};
+      \node at ( 0,0) [place] (label3) {交易所的成交规则，价格生成机制等};
+      \draw [<-] (label5.south) -- (label4.north);
+      \draw [<-] (label4.south) -- (label3.north);
+    \end{tikzpicture}
+    \caption*{将策略作为一个信息处理系统，内禀逻辑示意}
+    \end{figure}
+\end{frame}
+
+\section{价格生成机制}
+
+\subsection{期货交易流程}
+
+\begin{frame}{期货交易流程}
+  \begin{columns}
+    \column{5cm}
+\begin{itemize}
+    \item 开户
+    \item 下单
+      \begin{itemize}
+      \item 常用的交易指令
+      \item 指令如何下达
+      \end{itemize}
+    \item 竞价 
+      \begin{itemize}
+      \item 竞价方式
+      \item 计算机撮合成交规则
+      \end{itemize}
+    \item 结算 
+    \item 交割
+    \end{itemize}
+    \column{5cm}
+    对于价格生成，重要的是\textcolor{red}{下单}与\textcolor{red}{竞价}
+    \end{columns}
+\end{frame}
+
+\subsection{下单}
+
+\begin{frame}{交易指令类别}
+  \begin{columns}
+    \column{5cm}
+    常用的交易指令包括：
+    \begin{itemize}
+    \item 市价指令
+    \item 限价指令
+    \item 止损指令
+    \item 停止限价指令
+    \item 触价指令
+    \item 限时指令
+    \item 长效指令
+    \item 套利指令
+    \item 取消指令
+    \end{itemize}
+    \column{5cm}
+    我国各交易所支持的指令：
+    \begin{itemize}
+    \item 普遍采用限价指令
+    \item 郑商所还采用了市价指令、跨期套利指令和跨品种套利指令
+    \item 大商所则采用了市价指令、限价指令、止损指令、跨期套利指令和跨品种套利指令
+    \item 我国各交易所指令均为当日有效
+    \end{itemize}
+  \end{columns} 
+\end{frame}
+
+\begin{frame}{指令说明}
+  \begin{itemize}
+  \item 指令类别
+    \begin{itemize}
+    \item 限价单：执行时必须按限定价格或更好的价格成交的指令。下达限制指令时，用户必须指明具体的价位。可以按照客户的预期价格成交，但成交速度相对较慢，有时甚至无法成交
+    \item 市价单：按当时市场价即可成交的指令。客户下达指令时不须指明具体价位，而是要求以当时市场上可执行的最好价格达成交易。成交速度快，一旦指令下达后不可更改或撤销
+    \end{itemize}
+  \item 动作参数
+    \begin{itemize}
+    \item 方向：买入、卖出
+    \item 指令存续条件 Time In Force 如GTC、GTD等
+    \end{itemize}
+  \item 指令标记
+    \begin{itemize}
+    \item （开平仓标记） 期货中的开平仓
+    \item （投机套保标记） 期货中的投机或套保
+    \end{itemize}
+  \item 交易参数
+    \begin{itemize}
+    \item 标的代码
+    \item 申报量
+    \item 申报价格
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\subsection{竞价}
+
+\begin{frame}{集合竞价}
+  \begin{columns}
+    \column{5cm}
+    集合竞价最大成交量原则，即以此价格成交能够得到最大成交量
+    \begin{itemize}
+    \item 高于集合竞价产生的价格买入申报全部成交
+    \item 低于集合竞价产生价格的卖出申报全部成交
+    \item 等于集合竞价产生价格的买入或卖出申报，根据买入申报量，卖出申报量的
+      多少，按少的一方的申报量成交
+    \item 时间优先原则说明：仅提现在申报价等于集合竞价时，多出一方中，后来
+      者得不到成交
+    \end{itemize}
+    \column{5cm}
+    \begin{table}
+      \centering
+      \resizebox{\textwidth}{!}{
+        \setlength{\arrayrulewidth}{2pt}
+        \arrayrulecolor{orange}
+        \begin{tabular}{>{\columncolor{mycyan}}c|>{\columncolor{mycyan}}c|>{\columncolor{mypink}}c|>{\columncolor{mypink}}c}
+          \arrayrulecolor{orange}\hline
+          \multicolumn{1}{>{\columncolor{cyan}}c|}{\color{white}\textsf{Offer Price}} &  \multicolumn{1}{>{\columncolor{cyan}}c}{\color{white}\textsf{Offer Quantity}}
+          & \multicolumn{1}{>{\columncolor{pink}}c|}{\color{white}\textsf{Bid Price}} &  \multicolumn{1}{>{\columncolor{pink}}c}{\color{white}\textsf{Bid Quantity}}\\ 
+          \arrayrulecolor{orange}\hline
+          98.0 & 10 & 98.0 & 10 \\
+          \arrayrulecolor{orange}\hline
+          {} & {} & {} & 2 \\
+          \arrayrulecolor{orange}\hline
+          {} & {} & {} & {} \\
+          \arrayrulecolor{orange}\hline
+          {} & {} & {} & {} \\
+          \arrayrulecolor{orange}\hline
+        \end{tabular}
+      }
+    \end{table}
+    \begin{table}
+      \centering
+      \resizebox{\textwidth}{!}{
+        \setlength{\arrayrulewidth}{2pt}
+        \arrayrulecolor{orange}
+        \begin{tabular}{>{\columncolor{mycyan}}c|>{\columncolor{mycyan}}c|>{\columncolor{mypink}}c|>{\columncolor{mypink}}c}
+          \arrayrulecolor{orange}\hline
+          \multicolumn{1}{>{\columncolor{cyan}}c|}{\color{white}\textsf{Offer Price}} &  \multicolumn{1}{>{\columncolor{cyan}}c}{\color{white}\textsf{Offer Quantity}}
+          & \multicolumn{1}{>{\columncolor{pink}}c|}{\color{white}\textsf{Bid Price}} &  \multicolumn{1}{>{\columncolor{pink}}c}{\color{white}\textsf{Bid Quantity}}\\ 
+          \arrayrulecolor{orange}\hline
+          99.0 & 12 & 99.0 & 12 \\
+          \arrayrulecolor{orange}\hline
+          {} & {} & {} & 20 \\
+          \arrayrulecolor{orange}\hline
+          {} & {} & {} & {} \\
+          \arrayrulecolor{orange}\hline
+          {} & {} & {} & {} \\
+          \arrayrulecolor{orange}\hline
+        \end{tabular}
+      }
+    \end{table}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{连续竞价}
+  \begin{itemize}
+  \item 定义：连续竞价是指对买卖申报逐笔连续撮合的竞价方式。投资者连续保单指令到
+    达交易所后，交易所按照价格优先，时间优先，生成“委买队列”和“委卖队列”，如
+    果满足撮合条件，即立刻成交
+  \item 原则：
+    \begin{enumerate}
+    \item 价格优先
+      \begin{itemize}
+      \item 买进申报：价高者优先
+      \item 卖出申报：价低者优先
+      \end{itemize}
+    \item 时间优先
+      \begin{itemize}
+      \item 买卖方向、价格相同时，先申报者优先，先后顺序按照交易主机接受申报时
+        间确定
+        \end{itemize}
+    \end{enumerate}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{国内交易所交易时间段}
+     \begin{table}
+      \centering
+      \resizebox{0.6\textwidth}{!}{
+        \begin{tabular}{>{\sf }lllll}    %
+          \toprule
+         \multicolumn{2}{c}{} & \multicolumn{2}{c}{\bf 集合竞价} & \multicolumn{1}{c}{\bf 连续竞价}\\
+          \cmidrule{1-5}
+          & 日期 & 指令申报时间 & 撮合成交时间 & 连续交易时间\\
+          \midrule
+          上海证券交易所 & 周一至周五 & 9:15-9:25 & 9:25-9:30 & 9:30-11:30, 13:00-15:00 \\
+          \rowcolor{mygray}
+          深圳证券交易所 & 周一至周五 & 9:15-9:25 & 9:25-9:30 & 9:30-11:30, 13:00-15:00 \\
+          上海期货交易所 & 周一至周五 & 9:15-9:25 & 9:25-9:30 & 9:30-11:30, 13:00-15:00 \\
+          \rowcolor{mygray}
+          大连商品交易所 & 周一至周五 & 9:15-9:25 & 9:25-9:30 & 9:30-11:30, 13:00-15:00 \\
+          郑州商品交易所 & 周一至周五 & 9:15-9:25 & 9:25-9:30 & 9:30-11:30, 13:00-15:00 \\
+          \rowcolor{mygray}
+          中国金融期货交易所 & 周一至周五 & 9:15-9:25 & 9:25-9:30 & 9:30-11:30, 13:00-15:00 \\
+          上海黄金交易所 & 周一至周五 & 9:15-9:25 & 9:25-9:30 & 9:30-11:30, 13:00-15:00 \\
+          %Copper       & 385  & 24.4 \\
+          %Gold         & 130  & 25.6 \\
+          %\rowcolor{mygray}
+          %Steel/Iron   & 450  & 25.0 \\
+          %Lead         & 130  & 26.8 \\
+          %\rowcolor{mygray}
+          %Mercury      & 140  & 28.0 \\
+          %Water        & 4190 & 75.4 \\
+          %\rowcolor{mygray}
+          %Ice ($-$10 \textcelsius) & 2100 & 38 \\
+          \bottomrule
+        \end{tabular}
+      }
+    \end{table}
+\end{frame}
+
+\section{期货价格分析}
+
+\subsection{行情解读}
+
+\subsection{基本面分析}
+
+\subsection{技术分析}
+
+\section{Tick and Bar}
+
+%\begin{frame}{期货市场组织结构与投资者}
+%  \begin{figure}
+%    \centering
+%    \def\rectanglepath{-- ++(3.7, 0) -- ++(0, 2.2) -- ++(-3.7, 0) --cycle}
+%    \tikzstyle{place}=[rectangle,draw=blue!50,fill=blue!20,thick,
+%    inner sep=0pt,minimum size=6mm]
+%    \tikzstyle{transition}=[diamond,aspect=2,draw=black!50,fill=black!20,thick,
+%    inner sep=0pt,minimum size=1mm]
+%    \begin{tikzpicture}[scale=0.7]
+%      \node at ( 0,6) [place] (label5) {交易所};
+%      \node at ( 0,3) [place] (label4) {期货中介与服务机构};
+%      \node at ( 0,0) [place] (label3) {期货投资者};
+%      \draw [<-] (label5.south) -- (label4.north);
+%      \draw [<-] (label4.south) -- (label3.north);
+%      %\node at ( 0,1) [place] (label1) {$X-T$关系是否收敛？};
+%      %\node at ( 0,0) [place] (label0) {最终$X-T$ 关系};
+%      %\node at ( 3,1) [transition] (label6) {新的$X-T$ 关系};
+%      %\draw [->] (label1.east) -- (label6.west);
+%      %\draw [->] (label6.north) .. controls +(up:15mm) and +(right:15mm) 
+%      %.. (label4.east); 
+%      %\draw [->] (label5.south) -- (label4.north);
+%      %\draw [->] (label4.south) -- (label3.north);
+%      %\draw [->] (label3.south) -- (label2.north);
+%      %\draw [->] (label2.south) -- (label1.north);
+%      %\draw [->] (label1.south) -- (label0.north);
+%      %\draw [dashed] (-2, 2.5) \rectanglepath;
+%      %\draw (-1.5, 4.0) node {事例循环};
+%    \end{tikzpicture}
+%    \caption*{中国期货市场结构示意图}
+%  \end{figure}
+%  \begin{itemize}
+%  \item 交易者从市场获取信息，判断后发送指令到期货公司
+%  \item 期货公司发送交易指令到交易所
+%  \item 交易所通过下达指令影响影响
+%  \item 市场又将最新行情传递给交易者
+%  \end{itemize}
+%\end{frame}
+
+%\section{市场}
+
+%\section{交易所}
+
+%\begin{frame}
+% \begin{columns}
+% \column{2.2cm}
+%  \begin{table}[htb]
+%      \caption*{OrderBook 1}
+%      \centering
+%    \resizebox{\textwidth}{!}{
+%    \begin{tabular}{|r|r|}
+%      \toprule
+%      \textcolor{red}{Offer Price} & \textcolor{red}{Offer Quantity}\\
+%      \midrule
+%      \textcolor{red}{100} & \textcolor{red}{1}\\
+%      \midrule
+%      \textcolor{green}{Bid Price} & \textcolor{green}{Bid Quantity}\\
+%      \midrule
+%      {} & {}\\
+%      %\textcolor{green}{98} & \textcolor{green}{2}\\
+%      \bottomrule
+%    \end{tabular}
+%      }
+%  \end{table}
+%  \column{2.2cm}
+%  \begin{table}[htb]
+%    \caption*{OrderBook 2}
+%    \centering
+%\resizebox{\textwidth}{!}{
+%    \begin{tabular}{|r|r|}
+%      \toprule
+%      \textcolor{red}{Offer Price} & \textcolor{red}{Offer Quantity}\\
+%      \midrule
+%      \textcolor{red}{100} & \textcolor{red}{1}\\
+%      \midrule
+%      \textcolor{green}{Bid Price} & \textcolor{green}{Bid Quantity}\\
+%      \midrule
+%      \textcolor{green}{98} & \textcolor{green}{2}\\
+%      \bottomrule
+%    \end{tabular}
+%    }
+%  \end{table}
+%\column{2.2cm}
+%  \begin{table}[htb]
+%    \caption*{OrderBook 3}
+%    \centering
+%\resizebox{\textwidth}{!}{
+%    \begin{tabular}{|r|r|}
+%      \toprule
+%      \textcolor{red}{Offer Price} & \textcolor{red}{Offer Quantity}\\
+%      \midrule
+%      \textcolor{red}{102} & \textcolor{red}{2}\\
+%      \textcolor{red}{100} & \textcolor{red}{1}\\
+%      \midrule
+%      \textcolor{green}{Bid Price} & \textcolor{green}{Bid Quantity}\\
+%      \midrule
+%      \textcolor{green}{98} & \textcolor{green}{2}\\
+%      \bottomrule
+%    \end{tabular}
+%    }
+%  \end{table}
+%  \end{columns}
+%  \begin{columns}
+%\column{3cm}
+%  \begin{table}[htb]
+%    \caption*{OrderBook 4}
+%    \centering
+%\resizebox{\textwidth}{!}{
+%    \begin{tabular}{|r|r|}
+%      \toprule
+%      \textcolor{red}{Offer Price} & \textcolor{red}{Offer Quantity}\\
+%      \midrule
+%      \textcolor{red}{102} & \textcolor{red}{2}\\
+%      \textcolor{cyan}{\sout{100}} & \textcolor{cyan}{\sout{1}}\\
+%      \midrule
+%      \textcolor{green}{Bid Price} & \textcolor{green}{Bid Quantity}\\
+%      \midrule
+%      \textcolor{green}{98} & \textcolor{green}{2}\\
+%      \bottomrule
+%    \end{tabular}
+%    }
+%  \end{table}
+%  \column{3cm}
+%\begin{table}[htb]
+%    \caption*{OrderBook 5}
+%    \centering
+%\resizebox{\textwidth}{!}{
+%    \begin{tabular}{|r|r|}
+%      \toprule
+%      \textcolor{red}{Offer Price} & \textcolor{red}{Offer Quantity}\\
+%      \midrule
+%      \textcolor{red}{102} & \textcolor{red}{2}\\
+%      \midrule
+%      \textcolor{green}{Bid Price} & \textcolor{green}{Bid Quantity}\\
+%      \midrule
+%      \textcolor{green}{98} & \textcolor{green}{2}\\
+%      \bottomrule
+%    \end{tabular}
+%    }
+%  \end{table}
+%  \end{columns}
+%\end{frame}
+%
+%\subsection{做市商(Market Maker)市场}
+%\begin{frame}
+%  \begin{columns}
+%    \column{4cm}
+%    \begin{table}[htb]
+%      \caption*{OrderBook 1}
+%      \centering
+%      \resizebox{\textwidth}{!}{
+%        \begin{tabular}{|r|r|}
+%          \toprule
+%          \textcolor{red}{Offer Price} & \textcolor{red}{Offer Quantity}\\
+%          \midrule
+%          \textcolor{red}{6.6200} & \textcolor{red}{$\ldots$}\\
+%          \midrule
+%          \textcolor{green}{Bid Price} & \textcolor{green}{Bid Quantity}\\
+%          \midrule
+%          \textcolor{green}{6.5600} & \textcolor{green}{$\ldots$}\\
+%          \bottomrule
+%        \end{tabular}
+%      }
+%    \end{table}
+%    \begin{table}[htb]
+%      \caption*{OrderBook 2}
+%      \centering
+%      \resizebox{\textwidth}{!}{
+%        \begin{tabular}{|r|r|}
+%          \toprule
+%          \textcolor{red}{Offer Price} & \textcolor{red}{Offer Quantity}\\
+%          \midrule
+%          \textcolor{red}{6.6205} & \textcolor{red}{$\ldots$}\\
+%          \midrule
+%          \textcolor{green}{Bid Price} & \textcolor{green}{Bid Quantity}\\
+%          \midrule
+%          \textcolor{green}{6.5605} & \textcolor{green}{$\ldots$}\\
+%          \bottomrule
+%        \end{tabular}
+%      }
+%    \end{table}
+%    \column{5cm}
+%    \begin{itemize}
+%    \item 双方报价，点差比较大\\
+%    典型： 外汇市场\\
+%    例如银行的外汇兑换价牌
+%    \end{itemize}
+%  \end{columns}
+%\end{frame}
+%
+%\begin{frame}
+%  \begin{columns}
+%    \column{4cm}
+%    \begin{table}[htb]
+%      \caption*{OrderBook 1}
+%      \centering
+%      \resizebox{\textwidth}{!}{
+%        \begin{tabular}{|r|r|}
+%          \toprule
+%          \textcolor{red}{Offer Price} & \textcolor{red}{Offer Quantity}\\
+%          \midrule
+%          \textcolor{red}{98} & \textcolor{red}{10}\\
+%          \midrule
+%          \textcolor{green}{Bid Price} & \textcolor{green}{Bid Quantity}\\
+%          \midrule
+%          \textcolor{green}{92} & \textcolor{green}{10}\\
+%          \bottomrule
+%        \end{tabular}
+%      }
+%    \end{table}
+%\begin{table}[htb]
+%      \caption*{OrderBook 2}
+%      \centering
+%      \resizebox{\textwidth}{!}{
+%        \begin{tabular}{|r|r|}
+%          \toprule
+%          \textcolor{red}{Offer Price} & \textcolor{red}{Offer Quantity}\\
+%          \midrule
+%          \textcolor{red}{98} & \textcolor{cyan}{10-2}\\
+%          \midrule
+%          \textcolor{green}{Bid Price} & \textcolor{green}{Bid Quantity}\\
+%          \midrule
+%          \textcolor{cyan}{\sout{98}} & \textcolor{cyan}{\sout{2}}\\
+%          \textcolor{green}{92} & \textcolor{green}{10}\\
+%          \bottomrule
+%        \end{tabular}
+%      }
+%    \end{table}
+%    \column{4cm}
+%\begin{table}[htb]
+%      \caption*{OrderBook 3}
+%      \centering
+%      \resizebox{\textwidth}{!}{
+%        \begin{tabular}{|r|r|}
+%          \toprule
+%          \textcolor{red}{Offer Price} & \textcolor{red}{Offer Quantity}\\
+%          \midrule
+%          \textcolor{red}{98} & \textcolor{cyan}{10-2}\\
+%          \midrule
+%          \textcolor{green}{Bid Price} & \textcolor{green}{Bid Quantity}\\
+%          \midrule
+%          \textcolor{cyan}{{93}} & \textcolor{cyan}{2}\\
+%          \textcolor{green}{92} & \textcolor{green}{10}\\
+%          \bottomrule
+%        \end{tabular}
+%      }
+%    \end{table}
+%    \begin{itemize}
+%    \item 坐市商负责提供流动性
+%    \item 坐市商能否坐庄？
+%      \end{itemize}
+%  \end{columns}
+%\end{frame}
+
+%\section{交易市场的分类}
+%\begin{frame}
+%	\frametitle{图片}
+%	\begin{figure}[htbp]
+%    \centering
+%    \includegraphics[width=8cm]{power.png}
+%    \caption{Powered by}
+%    \label{fig:power}
+%    \end{figure}
+%\end{frame}
+%
+%\section{交易竞价方式}
+%\begin{frame}
+%	\frametitle{表格}
+%    \begin{table}
+%    \centering
+%    \caption{一个表格示例}
+%    \rowcolors[]{1}{blue!20}{blue!10}
+%    \begin{tabular}{|c|c|c|c|}
+%    \hline
+%    \rowcolor{blue!50}学号&姓名&年龄&成绩\\
+%    \hline
+%    001 & 丁一 & 25 & 91\\
+%    002 & 刘二 & 24 & 89\\
+%    003 & 张三 & 25 & 90\\
+%    004 & 李四 & 24 & 95\\
+%    005 & 王五 & 25 & 93\\
+%    006 & 赵六 & 26 & 88\\
+%    007 & 钱七 & 25 & 86\\
+%    008 & 王八 & 24 & 89\\
+%    009 & 孙九 & 25 & 90\\
+%    \hline
+%    \end{tabular}
+%    \end{table}
+%\end{frame}
+%
+%\section{交易时段}
+%\subsection{内置}
+%\begin{frame}
+%	\frametitle{block, definition, example}
+%	\begin{block}{块}
+%	这是一个block。
+%	\end{block}
+%	\pause
+%	\begin{definition}{定义：}
+%	这是一个definition。
+%	\end{definition}
+%	\pause
+%	\begin{example}{实例：}
+%	这是一个example。
+%	\end{example}
+%\end{frame}
+%\subsection{自定义}
+%\begin{frame}
+%	\begin{beamercolorbox}[rounded=true,shadow=true,wd=12cm]{bgcolor}
+%		这是一个自定义的彩色块状结构。
+%	\end{beamercolorbox}
+%\end{frame}
+%
+%\section{交易指令}
+%\begin{frame}
+%	\frametitle{限价单}
+%	\begin{columns}
+%	\column{3cm}
+%	这是第一栏的文字；栏宽3cm。
+%	\column{5cm}
+%	这是第二栏的文字；栏宽5cm。
+%	\end{columns}
+%\end{frame}
+%
+%\begin{frame}
+%	\frametitle{市价单}
+%	\begin{columns}
+%	\column{3cm}
+%	这是第一栏的文字；栏宽3cm。
+%	\column{5cm}
+%	这是第二栏的文字；栏宽5cm。
+%	\end{columns}
+%\end{frame}
+%
+%
+%\section{行情生成}
+%\begin{frame}
+%	\frametitle{质能方程}
+%	\begin{equation}
+%	E=mc^2
+%	\label{emc}
+%	\end{equation}
+%\end{frame}
+%
+%\begin{frame}
+%\end{frame}
+%
+%\section*{Acknowledgements}
+%\begin{frame}
+%	\frametitle{Powered by}
+%	\begin{center}
+%		\includegraphics[width=9cm]{power.png}
+%	\end{center}
+%\end{frame}
+%
+%\begin{frame}[plain]
+%	\begin{spacing}{1.5}
+%	\begin{center}
+%	\Huge{\textbf{Thanks for your attention!}}
+%
+%	\Huge{\textit{Any questions?}}
+%\end{center}
+%\end{spacing}
+%\end{frame}
+
+\end{document}
