@@ -66,7 +66,7 @@
     \resizebox{\textwidth}{!}{
       \setlength{\arrayrulewidth}{2pt}
       \arrayrulecolor{orange}
-      \begin{tabular}{c|c}
+      \begin{tabular}{|c|c|}
         \arrayrulecolor{orange}\hline
         \multicolumn{1}{>{\columncolor{cyan}}c|}{\color{white}\textsf{Offer Price}} &  \multicolumn{1}{>{\columncolor{cyan}}c}{\color{white}\textsf{Offer Quantity}}\\ 
         \arrayrulecolor{orange}\hline
@@ -104,26 +104,30 @@
       \resizebox{\textwidth}{!}{
         \setlength{\arrayrulewidth}{2pt}
         \arrayrulecolor{orange}
-        \begin{tabular}{c|c}
+        \begin{tabular}{|c|c|}
           \arrayrulecolor{orange}\hline
           \multicolumn{1}{>{\columncolor{cyan}}c|}{\color{white}\textsf{Offer Price}} &  \multicolumn{1}{>{\columncolor{cyan}}c}{\color{white}\textsf{Offer Quantity}}\\ 
           \arrayrulecolor{orange}\hline
           \rowcolor{mycyan}
           {} & {} \\
           \arrayrulecolor{orange}\hline
-          \rowcolor{mycyan}
-          \textcolor{red}{3286.20} & \textcolor{red}{3} \\
+          \rowcolor{myanticyan}
+          %\textcolor{red}{3286.20} & \textcolor{red}{3} \\
+          3286.20 & 3 \\
           \arrayrulecolor{orange}\hline
-          \rowcolor{mycyan}
-          \textcolor{red}{3285.4} & \textcolor{red}{1-1=0}\\
+          \rowcolor{myanticyan}
+          %\textcolor{red}{3285.4} & \textcolor{red}{1-1=0}\\
+          3285.4 & 1-1=0\\
           \arrayrulecolor{orange}\hline
-          \rowcolor{mycyan}
-          \textcolor{red}{3285.20} & \textcolor{red}{1-1=0}\\
+          \rowcolor{myanticyan}
+          %\textcolor{red}{3285.20} & \textcolor{red}{1-1=0}\\
+          3285.20 & 1-1=0\\
           \arrayrulecolor{orange}\hline
           \multicolumn{1}{>{\columncolor{pink}}c|}{\color{white}\textsf{Bid Price}} &  \multicolumn{1}{>{\columncolor{pink}}c}{\color{white}\textsf{Bid Quantity}}\\
           \arrayrulecolor{orange}\hline
-          \rowcolor{mypink}
-          \textcolor{red}{3285.4} & \textcolor{red}{3-1-1=1}\\
+          \rowcolor{myanticyan}
+          %\textcolor{red}{3285.4} & \textcolor{red}{3-1-1=1}\\
+          3285.4 & 3-1-1=1\\
           \arrayrulecolor{orange}\hline
           \rowcolor{mypink}
           {} & {}\\
@@ -145,7 +149,7 @@
     \resizebox{\textwidth}{!}{
       \setlength{\arrayrulewidth}{2pt}
       \arrayrulecolor{orange}
-      \begin{tabular}{c|c}
+      \begin{tabular}{|c|c|}
         \arrayrulecolor{orange}\hline
         \multicolumn{1}{>{\columncolor{cyan}}c|}{\color{white}\textsf{Offer Price}} &  \multicolumn{1}{>{\columncolor{cyan}}c}{\color{white}\textsf{Offer Quantity}}\\ 
         \arrayrulecolor{orange}\hline
@@ -183,7 +187,7 @@
       \resizebox{\textwidth}{!}{
         \setlength{\arrayrulewidth}{2pt}
         \arrayrulecolor{orange}
-        \begin{tabular}{c|c}
+        \begin{tabular}{|c|c|}
           \arrayrulecolor{orange}\hline
           \multicolumn{1}{>{\columncolor{cyan}}c|}{\color{white}\textsf{Offer Price}} &  \multicolumn{1}{>{\columncolor{cyan}}c}{\color{white}\textsf{Offer Quantity}}\\ 
           \arrayrulecolor{orange}\hline
@@ -220,17 +224,20 @@
   \end{table}
   \column{5cm}
   \begin{itemize}
-  \item Tick 1 $\to$ Tick 2:
+  \item Tick 1 $\to$ Tick 2(操作1):
     \begin{enumerate}[<+-|alert@+>]
-    \item No order higher than 3285.2
-    \item Acc A sell 1$@$3285.4, Acc B buy 3$@$3285.4, fill 1$@$3285.2, match 1$@$3285.4
-    \item Sell 3$@$3286.2
+    \item 当前市场报价，只看到1$@$3285.2, 1$@$3281.2
+    \item 操作1：账户A 买3$@$3285.4 ，卖1$@$3285.4, 挂卖3$@$3286.2
+    \item 结果：买入 1$@$3285.2，自成交1$@$3285.4，挂单买 1$@$3285.4
+    \item 下一盘口 3$@$3286.2，买 1$@$3285.4，其他人看到的是价格上升了，成交了两
+      手，最新成交价为 3285.4
     \end{enumerate}
-  \item Tick 2 $\to$ Tick 3:
+  \item Tick 2 $\to$ Tick 3(操作2):
     \begin{enumerate}[<+-|alert@+>]
-    \item Cancel 1$@$3285.4, cancel 2$@$3286.2
-    \item Close buy 1$@$3285.4 at price higher e.g. 3285.8, get (3285.8-3285.2=0.6)
-    \item Cancel 1$@$3286.2
+    \item 卖 1$@$3285.8，撤2$@$3286.2，撤1$@$3285.4 
+    \item 可能有人追买，报1$@$3286.0，在3285.8成交
+    \item 收益：(3285.8-3285.2=0.6)
+    \item 撤1$@$3286.2，一轮操作结束
     \end{enumerate}
   \end{itemize}
   \end{columns}
@@ -656,9 +663,9 @@
         \multicolumn{1}{>{\columncolor{cyan}}c|}{\color{white}\textsf{Offer Price}} &  \multicolumn{1}{>{\columncolor{cyan}}c}{\color{white}\textsf{Offer Quantity}}
         & \multicolumn{1}{>{\columncolor{pink}}c|}{\color{white}\textsf{Bid Price}} &  \multicolumn{1}{>{\columncolor{pink}}c}{\color{white}\textsf{Bid Quantity}}\\ 
         \arrayrulecolor{orange}\hline
-        102.0 & 2 & 98.0& 2 \\
+        102.0 & 2 & &  \\
         \arrayrulecolor{orange}\hline
-        {} & {} & {} & {} \\
+        {} & {} & {98.0} & {2} \\
         \arrayrulecolor{orange}\hline
       \end{tabular}
     }
